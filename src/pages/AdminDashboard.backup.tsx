@@ -12,8 +12,9 @@ import {
   Trash2,
   CheckCircle,
   Clock,
-  AlertCircle
-  // TrendingUp and TrendingDown removed - no longer used
+  AlertCircle,
+  TrendingUp,
+  TrendingDown
 } from 'lucide-react';
 
 const AdminDashboard: React.FC = () => {
@@ -218,11 +219,10 @@ const AdminDashboard: React.FC = () => {
                       <Users className="w-6 h-6 text-blue-600" />
                     </div>
                   </div>
-                  {/* Trends removed */}
-                  {/* <div className="mt-4 flex items-center text-sm text-green-600">
+                  <div className="mt-4 flex items-center text-sm text-green-600">
                     <TrendingUp className="w-4 h-4 mr-1" />
                     <span>+12% from last month</span>
-                  </div> */}
+                  </div>
                 </div>
 
                 <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
@@ -235,11 +235,10 @@ const AdminDashboard: React.FC = () => {
                       <FileText className="w-6 h-6 text-green-600" />
                     </div>
                   </div>
-                  {/* Trends removed */}
-                  {/* <div className="mt-4 flex items-center text-sm text-green-600">
+                  <div className="mt-4 flex items-center text-sm text-green-600">
                     <TrendingUp className="w-4 h-4 mr-1" />
                     <span>+8% from last month</span>
-                  </div> */}
+                  </div>
                 </div>
 
                 <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
@@ -252,11 +251,10 @@ const AdminDashboard: React.FC = () => {
                       <Shield className="w-6 h-6 text-purple-600" />
                     </div>
                   </div>
-                  {/* Trends removed */}
-                  {/* <div className="mt-4 flex items-center text-sm text-green-600">
+                  <div className="mt-4 flex items-center text-sm text-green-600">
                     <TrendingUp className="w-4 h-4 mr-1" />
                     <span>+15% from last month</span>
-                  </div> */}
+                  </div>
                 </div>
 
                 <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
@@ -269,11 +267,10 @@ const AdminDashboard: React.FC = () => {
                       <AlertCircle className="w-6 h-6 text-red-600" />
                     </div>
                   </div>
-                  {/* Trends removed */}
-                  {/* <div className="mt-4 flex items-center text-sm text-red-600">
+                  <div className="mt-4 flex items-center text-sm text-red-600">
                     <TrendingDown className="w-4 h-4 mr-1" />
                     <span>+5% from last month</span>
-                  </div> */}
+                  </div>
                 </div>
 
                 <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
@@ -286,11 +283,10 @@ const AdminDashboard: React.FC = () => {
                       <Shield className="w-6 h-6 text-indigo-600" />
                     </div>
                   </div>
-                  {/* Trends removed */}
-                  {/* <div className="mt-4 flex items-center text-sm text-green-600">
+                  <div className="mt-4 flex items-center text-sm text-green-600">
                     <TrendingUp className="w-4 h-4 mr-1" />
                     <span>+3% from last month</span>
-                  </div> */}
+                  </div>
                 </div>
 
                 <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
@@ -303,11 +299,10 @@ const AdminDashboard: React.FC = () => {
                       <Users className="w-6 h-6 text-orange-600" />
                     </div>
                   </div>
-                  {/* Trends removed */}
-                  {/* <div className="mt-4 flex items-center text-sm text-green-600">
+                  <div className="mt-4 flex items-center text-sm text-green-600">
                     <TrendingUp className="w-4 h-4 mr-1" />
                     <span>+18% from last month</span>
-                  </div> */}
+                  </div>
                 </div>
               </div>
 
