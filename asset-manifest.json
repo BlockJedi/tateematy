@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/tateematy/static/css/main.0ec8f809.css",
-    "main.js": "/tateematy/static/js/main.88fa3862.js",
+    "main.js": "/tateematy/static/js/main.fce4475a.js",
     "static/js/453.f78c2871.chunk.js": "/tateematy/static/js/453.f78c2871.chunk.js",
     "static/media/vision2030-logo.png": "/tateematy/static/media/vision2030-logo.203e59dfde03b5baf664.png",
     "static/media/moh-logo.png": "/tateematy/static/media/moh-logo.6f6b65e52dee59aaa8d5.png",
@@ -9,11 +9,11 @@
     "static/media/tateematy-logo.png": "/tateematy/static/media/tateematy-logo.ecf59de7557cabf2d4dd.png",
     "index.html": "/tateematy/index.html",
     "main.0ec8f809.css.map": "/tateematy/static/css/main.0ec8f809.css.map",
-    "main.88fa3862.js.map": "/tateematy/static/js/main.88fa3862.js.map",
+    "main.fce4475a.js.map": "/tateematy/static/js/main.fce4475a.js.map",
     "453.f78c2871.chunk.js.map": "/tateematy/static/js/453.f78c2871.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.0ec8f809.css",
-    "static/js/main.88fa3862.js"
+    "static/js/main.fce4475a.js"
   ]
 }
