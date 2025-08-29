@@ -30,10 +30,6 @@ const StatisticsPage: React.FC = () => {
             <BarChart3 className="w-5 h-5" />
             <span className="font-medium">System Statistics</span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            System Statistics
-            <span className="block text-2xl md:text-3xl font-tajawal mt-2 text-moh-green">إحصائيات النظام</span>
-          </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Comprehensive overview of the Tateematy vaccination management system performance and usage
           </p>
@@ -235,3 +231,4 @@ const StatisticsPage: React.FC = () => {
 };
 
 export default StatisticsPage;
+

@@ -1,0 +1,16 @@
+Visit Age	Vaccines
+At Birth	Hepatitis B
+2 Months	IPV (Inactivated Polio Vaccine), 
+DTaP (Diphtheria, Tetanus, Pertussis), Hepatitis B, 
+Hib (Haemophilus influenzae type b), 
+PCV (Pneumococcal Conjugate Vaccine), Rotavirus
+4 Months	IPV, DTaP, Hepatitis B, Hib, PCV, Rotavirus
+6 Months	IPV, DTaP, Hepatitis B, Hib, PCV*, OPV (Oral Polio Vaccine), Rotavirus, BCG
+9 Months	Measles, MCV4 (Meningococcal Conjugate Vaccine)
+12 Months	OPV, MMR (Measles, Mumps, Rubella), PCV, MCV4
+18 Months	OPV, DTaP, Hib, MMR, Varicella, Hepatitis A
+24 Months	Hepatitis A
+4-6 Years (First Class Primary School Age)	OPV, DTaP, MMR, Varicella
+11 Years	DTaP, HPV (Female only)
+12 Years	HPV (Female only)
+18 Years	MCV4

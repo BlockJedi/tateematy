@@ -1,23 +1,17 @@
 import React, { useState } from 'react';
-import { Shield, ArrowRight, CheckCircle, AlertCircle, User, Users } from 'lucide-react';
+import { Shield, ArrowRight, CheckCircle, AlertCircle, Loader } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../lib/AuthContext';
+import { authAPI } from '../lib/api';
 
 const WalletConnectPage: React.FC = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [isConnecting, setIsConnecting] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
-  const [showRoleSelection, setShowRoleSelection] = useState(false);
-  const [selectedRole, setSelectedRole] = useState('');
+  const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState('');
-
-  const handleRoleSelection = (role: string) => {
-    setSelectedRole(role);
-    if (role === 'parent') {
-      navigate('/parent');
-    } else if (role === 'healthcare-provider') {
-      navigate('/healthcare-provider');
-    }
-  };
+  const [walletAddress, setWalletAddress] = useState('');
 
   const connectWallet = async () => {
     setIsConnecting(true);
@@ -35,16 +29,111 @@ const WalletConnectPage: React.FC = () => {
       const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
       
       if (accounts.length > 0) {
+        const address = accounts[0];
+        setWalletAddress(address);
         setIsConnected(true);
-        setShowRoleSelection(true);
-        // Here you would typically handle the connection logic
-        console.log('Connected account:', accounts[0]);
+        
+        // Now process the wallet connection (login or auto-register)
+        await processWalletConnection(address);
       }
     } catch (err) {
       setError('Failed to connect wallet. Please try again.');
       console.error('Wallet connection error:', err);
     } finally {
       setIsConnecting(false);
+    }
+  };
+
+  const processWalletConnection = async (address: string) => {
+    setIsProcessing(true);
+    setError('');
+
+    try {
+      // Create a message for the user to sign
+      const message = 'Connect wallet to Tateematy vaccination management system';
+      
+      // Request signature from user
+      const signature = await window.ethereum!.request({
+        method: 'personal_sign',
+        params: [message, address]
+      });
+
+      // Try to connect wallet (this will either login existing user or create new parent)
+      const response = await authAPI.connectWallet(address, signature, message);
+      
+      if (response.success) {
+        if (response.data.user) {
+          // User exists - login and redirect
+          await login(address, signature);
+          redirectToDashboard(response.data.user.userType);
+        } else {
+          // User doesn't exist - auto-create parent account
+          await createParentAccount(address, signature);
+        }
+      } else {
+        throw new Error(response.message || 'Failed to process wallet connection');
+      }
+    } catch (err: any) {
+      console.error('Wallet processing error:', err);
+      setError(err.message || 'Failed to process wallet connection. Please try again.');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const createParentAccount = async (address: string, signature: string) => {
+    try {
+      // Auto-create parent account with basic info
+      const parentData = {
+        walletAddress: address,
+        userType: 'parent',
+        fullName: `Parent_${address.slice(0, 6)}`, // Temporary name
+        email: `${address.slice(0, 8)}@tateematy.com`, // Temporary email
+        mobile: '+966500000000', // Default Saudi mobile
+        // Generate a temporary 10-digit national ID based on wallet address and timestamp
+        nationalId: `1${address.slice(2, 6)}${Date.now().toString().slice(-5)}`, // Temporary unique ID (1 + 4 + 5 = 10 digits)
+        isVerified: false, // Will need verification later
+        profileComplete: false // Will need profile completion later
+      };
+
+      // Debug: Log the generated national ID
+      console.log('Generated national ID:', parentData.nationalId, 'Length:', parentData.nationalId.length);
+      console.log('Sending registration data:', parentData);
+      const response = await authAPI.register(parentData);
+      console.log('Registration response:', response);
+      
+      if (response.success) {
+        // Login with the newly created account
+        await login(address, signature);
+        redirectToDashboard('parent');
+      } else {
+        throw new Error(response.message || 'Failed to create parent account');
+      }
+    } catch (err: any) {
+      console.error('Account creation error:', err);
+      if (err.response?.data?.errors) {
+        // Show specific validation errors
+        const errorMessages = err.response.data.errors.map((e: any) => `${e.field}: ${e.message}`).join(', ');
+        setError(`Registration failed: ${errorMessages}`);
+      } else {
+        setError(err.message || 'Failed to create account. Please try again.');
+      }
+    }
+  };
+
+  const redirectToDashboard = (userType: string) => {
+    switch (userType) {
+      case 'parent':
+        navigate('/parent');
+        break;
+      case 'healthcare_provider':
+        navigate('/healthcare-provider');
+        break;
+      case 'admin':
+        navigate('/admin');
+        break;
+      default:
+        navigate('/parent');
     }
   };
 
@@ -60,6 +149,7 @@ const WalletConnectPage: React.FC = () => {
             </div>
             <h1 className="text-2xl font-bold text-gray-900">Tateematy</h1>
             <p className="text-sm text-gray-600 font-tajawal">تطعيمتي</p>
+            <p className="text-xs text-gray-500 mt-1">Vaccination Management System</p>
           </div>
 
           {/* Connection Status */}
@@ -67,10 +157,12 @@ const WalletConnectPage: React.FC = () => {
             <div>
               <div className="mb-6">
                 <h2 className="text-xl font-semibold text-gray-900 mb-2">
-                  Connect Your Wallet
+                  Login or Register
                 </h2>
                 <p className="text-gray-600 text-sm">
-                  Connect your MetaMask wallet to access the Tateematy vaccination management system
+                  Connect your MetaMask wallet to login or register with Tateematy. 
+                  New users will automatically be registered as parents. 
+                  Healthcare providers can update their role after first login.
                 </p>
               </div>
 
@@ -90,7 +182,7 @@ const WalletConnectPage: React.FC = () => {
                     <div className="w-6 h-6 bg-orange-500 rounded-lg flex items-center justify-center">
                       <span className="text-white text-xs font-bold">🦊</span>
                     </div>
-                    <span>Connect with MetaMask</span>
+                    <span>Login/Register with MetaMask</span>
                     <ArrowRight className="w-5 h-5" />
                   </>
                 )}
@@ -119,56 +211,35 @@ const WalletConnectPage: React.FC = () => {
             </div>
           ) : (
             <div>
-              {!showRoleSelection ? (
-                <div className="mb-6">
-                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <CheckCircle className="w-8 h-8 text-green-600" />
-                  </div>
-                  <h2 className="text-xl font-semibold text-gray-900 mb-2">
-                    Wallet Connected!
-                  </h2>
-                  <p className="text-gray-600 text-sm">
-                    Your MetaMask wallet has been successfully connected to Tateematy
-                  </p>
+              <div className="mb-6">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle className="w-8 h-8 text-green-600" />
                 </div>
-              ) : (
-                <div className="mb-6">
-                  <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <User className="w-8 h-8 text-blue-600" />
-                  </div>
-                  <h2 className="text-xl font-semibold text-gray-900 mb-2">
-                    Select Your Role
-                  </h2>
-                  <p className="text-gray-600 text-sm">
-                    Choose how you want to access Tateematy
+                <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                  Wallet Connected!
+                </h2>
+                <p className="text-gray-600 text-sm">
+                  {isProcessing ? 'Processing your wallet...' : 'Processing wallet connection...'}
+                </p>
+                {walletAddress && (
+                  <p className="text-xs text-gray-500 mt-2 font-mono">
+                    {walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}
                   </p>
+                )}
+              </div>
+
+              {isProcessing && (
+                <div className="flex items-center justify-center space-x-2 text-moh-green">
+                  <Loader className="w-5 h-5 animate-spin" />
+                  <span className="text-sm">Setting up your account...</span>
                 </div>
               )}
 
-              {!showRoleSelection ? (
-                <button 
-                  onClick={() => setShowRoleSelection(true)}
-                  className="w-full bg-moh-green text-white font-semibold py-3 px-6 rounded-xl hover:bg-green-600 transition-colors"
-                >
-                  Continue
-                </button>
-              ) : (
-                <div className="space-y-3">
-                  <button
-                    onClick={() => handleRoleSelection('parent')}
-                    className="w-full bg-moh-green text-white font-semibold py-3 px-6 rounded-xl hover:bg-green-600 transition-colors flex items-center justify-center space-x-2"
-                  >
-                    <Users className="w-5 h-5" />
-                    <span>Login as Parent/Guardian</span>
-                  </button>
-                  
-                  <button
-                    onClick={() => handleRoleSelection('healthcare-provider')}
-                    className="w-full bg-accent-blue text-white font-semibold py-3 px-6 rounded-xl hover:bg-blue-600 transition-colors flex items-center justify-center space-x-2"
-                  >
-                    <Shield className="w-5 h-5" />
-                    <span>Login as Healthcare Provider</span>
-                  </button>
+              {/* Error Message */}
+              {error && (
+                <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center space-x-2">
+                  <AlertCircle className="w-4 h-4 text-red-500" />
+                  <span className="text-sm text-red-600">{error}</span>
                 </div>
               )}
             </div>
@@ -186,12 +257,13 @@ const WalletConnectPage: React.FC = () => {
         {/* Additional Information */}
         <div className="mt-8 text-center">
           <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-            <h3 className="font-semibold text-gray-900 mb-3">Why MetaMask?</h3>
+            <h3 className="font-semibold text-gray-900 mb-3">How It Works</h3>
             <div className="space-y-2 text-sm text-gray-600">
-              <p>• Secure authentication using blockchain technology</p>
-              <p>• No passwords to remember or lose</p>
-              <p>• Complete control over your data and privacy</p>
-              <p>• Compatible with Tateematy's blockchain system</p>
+              <p>• Connect your MetaMask wallet securely</p>
+              <p>• If you're a returning user → Login automatically</p>
+              <p>• If you're new → Auto-register as parent</p>
+              <p>• Complete your profile after first login</p>
+              <p>• Healthcare providers can update their role later</p>
             </div>
           </div>
         </div>

@@ -29,7 +29,6 @@ const ContactPage: React.FC = () => {
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
             Contact Us
-            <span className="block text-2xl md:text-3xl font-tajawal mt-2 text-moh-green">اتصل بنا</span>
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Have questions about Tateematy? We're here to help. Get in touch with our 

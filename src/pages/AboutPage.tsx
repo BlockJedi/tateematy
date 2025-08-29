@@ -1,5 +1,6 @@
 import React from 'react';
 import { Shield, Database, Lock, Globe, Users, Award } from 'lucide-react';
+import systemLogo from '../assets/images/logos/system-logo.png';
 
 const AboutPage: React.FC = () => {
   return (
@@ -7,10 +8,13 @@ const AboutPage: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Page Header */}
         <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            About Tateematy
-            <span className="block text-2xl md:text-3xl font-tajawal mt-2 text-moh-green">تطعيمتي</span>
-          </h1>
+          <div className="flex justify-center mb-6">
+            <img 
+              src={systemLogo} 
+              alt="Tateematy System Logo" 
+              className="w-[400px] h-auto object-contain max-w-full"
+            />
+          </div>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             A revolutionary blockchain-based vaccination management system designed to transform 
             healthcare delivery in Saudi Arabia

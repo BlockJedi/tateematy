@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import mohLogo from '../assets/images/logos/moh-logo.png';
 import vision2030Logo from '../assets/images/logos/vision2030-logo.png';
 
@@ -31,10 +32,10 @@ const Footer: React.FC = () => {
           <div>
             <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-2 text-sm text-gray-300">
-              <li><a href="/" className="hover:text-white transition-colors">Home</a></li>
-              <li><a href="/about" className="hover:text-white transition-colors">About</a></li>
-              <li><a href="/vaccination-schedule" className="hover:text-white transition-colors">Schedule</a></li>
-              <li><a href="/contact" className="hover:text-white transition-colors">Contact</a></li>
+              <li><Link to="/" className="hover:text-white transition-colors">Home</Link></li>
+              <li><Link to="/about" className="hover:text-white transition-colors">About</Link></li>
+              <li><Link to="/vaccination-schedule" className="hover:text-white transition-colors">Schedule</Link></li>
+              <li><Link to="/contact" className="hover:text-white transition-colors">Contact</Link></li>
             </ul>
           </div>
 
@@ -63,9 +64,9 @@ const Footer: React.FC = () => {
               © 2025 Nurayn Almosa supervised by Dr.Shada Salamh at King Saud University
             </div>
             <div className="flex space-x-6 text-sm text-gray-400">
-              <a href="/" className="hover:text-white transition-colors">Home</a>
-              <a href="/about" className="hover:text-white transition-colors">About</a>
-              <a href="/contact" className="hover:text-white transition-colors">Contact</a>
+              <Link to="/" className="hover:text-white transition-colors">Home</Link>
+              <Link to="/about" className="hover:text-white transition-colors">About</Link>
+              <Link to="/contact" className="hover:text-white transition-colors">Contact</Link>
             </div>
           </div>
         </div>
